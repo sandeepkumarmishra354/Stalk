@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>404 page not found | Stalk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{url_for('static',filename='w3.css')}}"/>
+    <link rel="icon" type="image/gif/png" href="{{url_for('static',filename='logo.png')}}">
+</head>
+<body>
+    <div class="w3-card w3-container w3-deep-purple w3-mobile">
+        <center>
+            <a href="/">
+                <img src="{{url_for('static',filename='logo.png')}}" width="150px" height="100px">
+            </a>
+            <p>“It is when you are angry that you must watch how you talk.”</p>
+        </center>
+    </div><br>
+    <center>
+        <div class="w3-container w3-card w3-pannel w3-mobile" style="width:80%"><br>
+            <h1 class="w3-text-red">Error:</h1>
+            <img class="w3-image w3-border w3-border-white" src="/static/404-error.jpg" alt="404 error">
+            <br>
+            <h1 class="w3-text-red">OOPS. PAGE NOT FOUND</h1>
+            <br><br>
+            <h3 class="w3-text-blue">sorry...it's not you. it's us.</h3><br>
+        </div><br>
+        <a href="/" class="w3-button w3-blue w3-mobile w3-card w3-hover-deep-purple">Go Home</a>
+    </center>
+    <div class="w3-border-top w3-border-blue w3-center w3-mobile w3-container w3-card" style="margin-top: 50px">
+        <p>Stalk &copy;{{getYear()}}</p>
+        <p>All right reserved.</p>
+    </div>
+</body>

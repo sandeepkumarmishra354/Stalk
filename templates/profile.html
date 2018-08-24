@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{username}} profile | Stalk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{url_for('static',filename='w3.css')}}"/>
+    <link rel="icon" type="image/gif/png" href="{{url_for('static',filename='logo.png')}}">
+    <style>
+        .input_cls {
+            text-align: center;
+        }
+        #newpicid {
+	        width: 0.1px;
+	        height: 0.1px;
+	        opacity: 0;
+	        overflow: hidden;
+	        position: absolute;
+	        z-index: -1;
+        }
+    </style>
+    <script>
+        function showHideWarning(flag) {
+            console.log("warning...");
+            if(flag == "S") {
+                document.getElementById('warning_div').style.display='block'
+                return false
+            }
+            if(flag == "H") {
+                document.getElementById('warning_div').style.display='none'
+                return false
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="w3-card w3-container w3-deep-purple w3-mobile">
+        <center>
+            <a href="/">
+                <img src="{{url_for('static',filename='logo.png')}}" width="150px" height="100px">
+            </a>
+            <p>“It is when you are angry that you must watch how you talk.”</p>
+        </center>
+    </div>
+    <center>
+        <form action="/profile/{{current_user.get_id()}}/update/" method="POST" enctype="multipart/form-data" class="w3-row-padding w3-mobile w3-panel w3-card" style="width:80%; margin-top: 10px">
+            <h2 class="w3-text-teal">@{{current_user.get_id()}}</h2>
+            <hr>
+            <img class="w3-image w3-circle w3-border w3-border-blue" src="{{url_for('static',filename=getUserImage(username))}}" width="150px" height="150px">
+            <br><br>
+            <label class="w3-card w3-hover-deep-purple w3-border w3-border-blue" for="newpicid" style="padding: 8px">set new &#8679;</label>
+            <input accept="image/*" id="newpicid" type="file" name="new_img">
+            <hr>
+            <br>
+            <div class="w3-half">
+                <label>First name</label>
+                <input placeholder="{{getIndInfo(username,'F')}}" class="input_cls w3-card w3-mobile w3-input w3-white w3-border-bottom w3-border-blue" type="text" name="fname">
+            </div>
+            <div class="w3-half">
+                <label>Last name</label>
+                <input placeholder="{{getIndInfo(username,'L')}}" class="input_cls w3-card w3-mobile w3-input w3-white w3-border-bottom w3-border-blue" type="text" name="lname"><br>
+            </div>
+            <div class="w3-half">
+                <label>Email</label>
+                <input placeholder="{{getIndInfo(username,'E')}}" class="input_cls w3-card w3-mobile w3-input w3-white w3-border-bottom w3-border-blue" type="email" name="email">
+            </div>
+            <div class="w3-half">
+                <label>New password</label>
+                <input placeholder="******" class="input_cls w3-card w3-mobile w3-input w3-white w3-border-bottom w3-border-blue" type="text" name="pswrd"><br>
+            </div>
+            {% if error %}
+            <p style="color:red">{{error}}</p>
+            {% endif %}
+            <button type="submit" class="w3-button w3-blue w3-hover-deep-purple" style="margin-bottom:10px">Update details</button>
+            <br><br><br>
+            <button onclick="return(showHideWarning('S'))" class="w3-button w3-red">delete account</button>
+            <div id="warning_div" class="w3-modal">
+                <div class="w3-modal-content w3-animate-zoom w3-card-4">
+                    <span onclick="return(showHideWarning('H'))" class="w3-button w3-display-topright">
+                        &times;
+                    </span>
+                    <h2 class="w3-text-red"><b>Are you sure ?</b></h2>
+                    <hr>
+                    <p class="w3-text-teal">this is not a reverse process...</p>
+                    <p class="w3-text-red"><b>All of your data will be removed permanantly</b></p>
+                    <br>
+                    <a href="#" style="width:45%;margin-bottom: 8px" class="w3-button w3-red">Delete</a>
+                    <button onclick="return(showHideWarning('H'))" style="width:45%;margin-bottom: 8px" class="w3-button w3-grey">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </center>
+    <div class="w3-border-top w3-border-blue w3-center w3-mobile w3-container w3-card" style="margin-top: 50px;margin-bottom: 0px">
+        <p>Stalk &copy;{{getYear()}}</p>
+        <p>All right reserved.</p>
+        <p class="w3-text-teal">total user: {{getTotal()}}</p>
+    </div>
+</body>

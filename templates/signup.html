@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Stalk | SignUp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{url_for('static',filename='w3.css')}}"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="{{url_for('static',filename='css/signup.css')}}">
+    <link rel="icon" type="image/gif/png" href="{{url_for('static',filename='logo.png')}}">
+    <script src="{{url_for('static',filename='socket.io.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/signup.js')}}"></script>
+    <script>
+        var socket = io("/signup_page/")
+        socket.on('connect',()=> {
+            socket.emit('signup',"ddd")
+        })
+        function toggleCheckBox(status,value) {
+            let male = document.getElementById('malechkboxid');
+            let female = document.getElementById('femalechkboxid');
+            if(status && value=='male') {
+                female.checked = false;
+            }
+            if(status && value=='female') {
+                male.checked = false;
+            }
+        }
+    </script>
+    <style>
+        #file_upld {
+	        width: 0.1px;
+	        height: 0.1px;
+	        opacity: 0;
+	        overflow: hidden;
+	        position: absolute;
+	        z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-card w3-mobile w3-container w3-deep-purple">
+        <center>
+            <a href="/">
+                <img src="{{url_for('static',filename='logo.png')}}" width="150px" height="100px">
+            </a>
+            <p>“It is when you are angry that you must watch how you talk.”</p>
+        </center>
+    </div>
+    <center>
+        <form action="/signup/" enctype="multipart/form-data" method="POST" class="w3-mobile w3-panel w3-card" id="signupformid" onsubmit="return(validate_form_data())">
+            <h2 class="w3-text-deep-purple">Join Stalk</h2>
+            <input class="w3-card w3-mobile w3-animate-input w3-input w3-white w3-border-bottom w3-border-blue" type="text" id="fname" name="fname" required placeholder="first name">
+            <br>
+            <input class="w3-card w3-mobile w3-animate-input w3-input w3-white w3-border-bottom w3-border-blue" type="text" id="lname" name="lname" required placeholder="last name">
+            <br/>
+            <label class="w3-text-teal">Gender &nbsp;</label>
+            <input onchange="toggleCheckBox(this.checked,this.value)" class="w3-check" type="checkbox" name="gender_male" value="male" id="malechkboxid">
+            <label for="malechkboxid">Male</label>
+            <input onchange="toggleCheckBox(this.checked,this.value)" class="w3-check" type="checkbox" name="gender_female" value="female" id="femalechkboxid">
+            <label for="femalechkboxid">Female</label><br><br>
+            <input type="hidden" name="gender" value="">
+            <label class="w3-card w3-hover-deep-purple" style="padding:15px" for="file_upld" id="file_lbl">Upload image</label>
+            <input accept="image/*" type="file" name="user_img" id="file_upld"><br><br>
+            <input class="w3-card w3-mobile w3-animate-input w3-input w3-white w3-border-bottom w3-border-blue" type="email" id="email" name="email" required placeholder="email">
+            <br>
+            <input class="w3-card w3-mobile w3-animate-input w3-input w3-white w3-border-bottom w3-border-blue" type="text" id="username" name="username" required placeholder="username" oninput="checkUsernameAvail(this.value)">
+            <p id="usernameerror" style="display:none; color: red"></p>
+            <br>
+            <input class="w3-card w3-mobile w3-animate-input w3-input w3-white w3-border-bottom w3-border-blue" type="text" id="pswrd1" name="pswrd1" required placeholder="password">
+            <br>
+            <input class="w3-card w3-mobile w3-animate-input w3-input w3-white w3-border-bottom w3-border-blue" type="password" id="pswrd2" name="pswrd2" required placeholder="repeat password">
+            <p id="pswrd_err_element" style="color: red"></p>
+            {% if error %}
+            <p style="color:red">{{error}}</p>
+            {% endif %}
+            <br>
+            <button type="submit" class="w3-card w3-mobile w3-hover-deep-purple w3-button w3-blue" id="signup-btn">Join</button>
+        </form>
+        <div class="w3-container w3-mobile" style="width: 70%">
+            <p class="w3-text-teal">Already a member ?</p>
+            <a href="/" class="w3-card w3-mobile w3-hover-deep-purple w3-button w3-block w3-blue" id="login-btn" style="margin-top: 10px">login</a>
+        </div><hr>
+    </center>
+    <div class="w3-border-top w3-border-blue w3-center w3-mobile w3-container w3-card" style="margin-top: 50px">
+        <p>Stalk &copy;{{getYear()}}</p>
+        <p>All right reserved.</p>
+        <p class="w3-text-teal">total user: {{getTotal()}}</p>
+    </div>
+</body>
+</html>
