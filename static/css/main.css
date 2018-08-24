@@ -1,0 +1,14 @@
+#usrnm,#pswrd {
+    width: 80%;
+    text-align: center
+}
+#login-btn {
+    margin-bottom: 10px
+}
+#signup-btn {
+    margin-top: 10px
+}
+#loginformid {
+    width: 80%;
+    margin-top: 10px;
+}
