@@ -1,0 +1,11 @@
+#signupformid {
+    width: 80%;
+    margin-top: 70px
+}
+#fname,#lname,#username,#email,#pswrd1,#pswrd2 {
+    width: 80%;
+    text-align: center
+}
+#signup-btn {
+    margin-bottom: 10px
+}
