@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <style>
+            h3 {
+                color: brown;
+                font-size: large;
+            }
+            #verify {
+                border: 1px solid blue;
+                padding: 15px;
+            }
+            #verify:hover {
+                background-color: lightseagreen;
+                color: white;
+                transition: 1s
+            }
+            a {
+                text-decoration: none;
+            }
+            header {
+                padding: 10px
+            }
+        </style>
+    </head>
+    <body>
+        <center>
+            <header style="background-color:lightseagreen">
+                <h1 style="color:white">Stalk</h1>
+            </header>
+            <h3>TIME TO VERIFY</h3>
+            <h3>YOUR EMAIL</h3>
+            <br>
+            <p>You've received this message because your email address
+              has been registered with <a href="{{home_url}}">Stalk</a>. <p>Verify yourself and
+              confirm your email by clicking below.</p></p>
+            <br>
+            <a id="verify" href="{{url_to_verify}}">CLICK TO VERIFY</a>
+            <br><br>
+            <small>If it wasn't you who submitted your email address,well then that's messed up and</small>
+            <small>we're sorry. Simple ignore this email and don't click above. You will not receive any emails from us.</small>
+        </center>
+    </body>
+</html>

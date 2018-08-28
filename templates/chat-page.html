@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{{url_for('static',filename='w3.css')}}"/>
     <link rel="icon" type="image/gif/png" href="{{url_for('static',filename='logo.png')}}">
     <script src="{{url_for('static',filename='socket.io.min.js')}}"></script>
+    <script src="{{url_for('static',filename='jquery.js')}}"></script>
     <script>
         function w3_open() {
             let sidebar = document.getElementById("mySidebar");
@@ -18,12 +19,37 @@
             sidebar.style.display = "none";
         }
     </script>
+    <script>
+        var socket = io("/chat_page/")
+        socket.on('connect',()=> {
+            socket.emit('chat_connect',"online")
+        })
+        socket.on('new_online',(data)=> {
+            if($('#logged_user').text() != data.sender) {
+                $('#mySidebar').filter('#id'+data.sender).remove()
+                $('#mySidebar').append(data.element)
+                $('#total_online').text(data.total_online)
+            }
+        })
+        socket.on('new_offline', (data)=> {
+            $('a').remove(data.id)
+            $('#total_online').text(data.total_online)
+        })
+    </script>
     <style>
         #fixedheader {
             position: -webkit- sticky;
             position: sticky;
             top: 0;
             width: 100%;
+            float: left
+        }
+        #msg-option {
+            position: -webkit- sticky;
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+            margin-bottom: 0px;
         }
         #mySidebar {
             top: 0
@@ -33,40 +59,39 @@
 </head>
 
 <body>
-    <div class="w3-card w3-container w3-deep-purple w3-mobile" id="mainheader">
-        <center>
-            <a href="/">
-                <img src="{{url_for('static',filename='logo.png')}}" width="150px" height="100px">
-            </a>
-            <p>“It is when you are angry that you must watch how you talk.”</p>
-        </center>
-    </div>
-    <div class="w3-dark-grey w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:250px;" id="mySidebar">
+    <div class="w3-white w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:250px;" id="mySidebar">
         <button style="width: 50px;" class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">X</button>
         <div class="w3-display-container" style="height: 105px">
-            <img class="w3-display-topmiddle w3-circle" src="{{url_for('static',filename=getUserImage(username))}}" width="100px" height="100px">
+            <img style="cursor:pointer" class="w3-hover-sepia w3-display-topmiddle w3-circle" src="{{url_for('static',filename=getUserImage(username))}}" width="100px" height="100px">
         </div>
         <center>
-            <a style="text-align: center;width: 190px" href="{{url_for('profile',user=username)}}" class="w3-card w3-text-teal w3-hover-deep-purple w3-bar-item w3-button">{{username}}</a>
+            <a style="text-align: center;width: 190px;" href="{{url_for('profile',user=username)}}" class="w3-hover-white w3-text-teal w3-border w3-border-blue w3-bar-item w3-button">
+                {{username }}
+            </a>
             <br>
             <a href="/logout" class="w3-text-red">logout</a>
         </center>
-        <p class="w3-text-teal">online users:</p>
-        {% for user in getAllUsername() %}
+        <hr>
+        <p style="text-align:center;font-size: large" class="w3-text-teal">
+            online users <span id="total_online" class="w3-badge w3-blue">{{length(onlineUsers)}}</span>
+        </p>
+        <hr>
+        {% for user in onlineUsers %}
             {% if user != current_user.get_id() %}
-                <a style="text-align: center" href="#" class="w3-bar-item w3-button">{{user}}</a>
+                <a id="{{'id'+user}}" style="text-align: center" href="#" class="w3-animate-bottom w3-text-blue w3-bar-item w3-button">
+                    <img src="{{url_for('static',filename=getUserImage(user))}}" class="w3-image w3-circle" width="50px">
+                    {{user}}
+                </a>
             {% endif %}
         {% endfor %}
     </div>
     <div class="w3-main" style="margin-left:250px">
-        <div class="w3-teal" id="fixedheader">
-          <button class="w3-button w3-teal w3-xlarge w3-hide-large" onclick="w3_open()">&#9776;</button>
-          <div class="w3-container">
-            <h1>My Page</h1>
-          </div>
+        <div class="w3-blue w3-container w3-card" id="fixedheader">
+          <button class="w3-button w3-blue w3-xlarge w3-hide-large w3-text-white" onclick="w3_open()">&#9776;</button>
+          <h2 class="w3-animate-right" style="float:right" id="logged_user">{{username}}</h2>
         </div>
         
-        <div class="w3-container">
+        <div class="w3-container w3-animate-zoom">
         <h3>Responsive Sidebar</h3>
         <p>The sidebar in this example will always be displayed on screens wider than 992px, and hidden on tablets or mobile phones (screens less than 993px wide).</p>
         <p>On tablets and mobile phones the sidebar is replaced with a menu icon to open the sidebar.</p>
@@ -79,9 +104,8 @@
         <p><b>Resize the browser window to see how it works.</b></p>
         </div>
         </div>
-        <div class="w3-border-top w3-border-blue w3-center w3-mobile w3-container w3-card" style="margin-top: 50px">
-            <p>Stalk &copy;{{getYear()}}</p>
-            <p>All right reserved.</p>
-            <p class="w3-text-teal">total user: {{getTotal()}}</p>
+        <div id="msg-option" class="w3-blue w3-main w3-card w3-panel w3-cell-row" style="margin-left:250px;margin-bottom:0px">
+            <input placeholder="type message..." style="width:60%;text-align: center" type="text" class="w3-animate-left w3-cell w3-input w3-white w3-border-bottom w3-border-blue w3-card w3-mobile">
+            <button class="w3-animate-right w3-cell w3-button w3-white">send</button>
         </div>
 </body>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Alert already logged in</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{url_for('static',filename='w3.css')}}"/>
+    <link rel="icon" type="image/gif/png" href="{{url_for('static',filename='logo.png')}}">
+</head>
+<body>
+    <div class="w3-container w3-card w3-center" style="width: 100%;margin-top: 20px">
+        <div class="w3-container w3-center">
+            <h1 class="w3-text-red">Alert !!!</h1>
+            <hr>
+            <p class="w3-text-red">Error:</p>
+            <div class="w3-panel w3-pale-red w3-leftbar w3-border-red">
+                <p>it looks like that your account is already logged in...</p>
+            </div>
+            <br>
+            <h3>logged in device details:</h3>
+            <div class="w3-panel w3-light-blue w3-leftbar w3-border-blue">
+                <p>{{device_details}}</p>
+            </div>
+            <br>
+            <a class="w3-text-blue" href="#">Yes,i know</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a class="w3-text-blue" href="#">I don't know</a>
+        </div>
+    </div>
+</body>

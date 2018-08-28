@@ -42,7 +42,7 @@
     </style>
 </head>
 <body>
-    <div class="w3-card w3-mobile w3-container w3-deep-purple">
+    <div class="w3-card w3-mobile w3-container w3-blue">
         <center>
             <a href="/">
                 <img src="{{url_for('static',filename='logo.png')}}" width="150px" height="100px">
@@ -51,19 +51,19 @@
         </center>
     </div>
     <center>
-        <form action="/signup/" enctype="multipart/form-data" method="POST" class="w3-mobile w3-panel w3-card" id="signupformid" onsubmit="return(validate_form_data())">
-            <h2 class="w3-text-deep-purple">Join Stalk</h2>
+        <form action="/signup/" enctype="multipart/form-data" method="POST" class="w3-mobile w3-panel w3-card w3-blue" id="signupformid" onsubmit="return(validate_form_data())">
+            <h2 class="w3-text-white">Join Stalk</h2>
             <input class="w3-card w3-mobile w3-animate-input w3-input w3-white w3-border-bottom w3-border-blue" type="text" id="fname" name="fname" required placeholder="first name">
             <br>
             <input class="w3-card w3-mobile w3-animate-input w3-input w3-white w3-border-bottom w3-border-blue" type="text" id="lname" name="lname" required placeholder="last name">
             <br/>
-            <label class="w3-text-teal">Gender &nbsp;</label>
+            <label class="w3-text-white">Gender &nbsp;</label>
             <input onchange="toggleCheckBox(this.checked,this.value)" class="w3-check" type="checkbox" name="gender_male" value="male" id="malechkboxid">
             <label for="malechkboxid">Male</label>
             <input onchange="toggleCheckBox(this.checked,this.value)" class="w3-check" type="checkbox" name="gender_female" value="female" id="femalechkboxid">
             <label for="femalechkboxid">Female</label><br><br>
             <input type="hidden" name="gender" value="">
-            <label class="w3-card w3-hover-deep-purple" style="padding:15px" for="file_upld" id="file_lbl">Upload image</label>
+            <label class="w3-card w3-hover-blue w3-border w3-border-white w3-white" style="padding:15px" for="file_upld" id="file_lbl">Upload image</label>
             <input accept="image/*" type="file" name="user_img" id="file_upld"><br><br>
             <input class="w3-card w3-mobile w3-animate-input w3-input w3-white w3-border-bottom w3-border-blue" type="email" id="email" name="email" required placeholder="email">
             <br>
@@ -78,11 +78,11 @@
             <p style="color:red">{{error}}</p>
             {% endif %}
             <br>
-            <button type="submit" class="w3-card w3-mobile w3-hover-deep-purple w3-button w3-blue" id="signup-btn">Join</button>
+            <button type="submit" class="w3-card w3-mobile w3-hover-blue w3-button w3-white w3-border w3-border-white" id="signup-btn">Join</button>
         </form>
         <div class="w3-container w3-mobile" style="width: 70%">
-            <p class="w3-text-teal">Already a member ?</p>
-            <a href="/" class="w3-card w3-mobile w3-hover-deep-purple w3-button w3-block w3-blue" id="login-btn" style="margin-top: 10px">login</a>
+            <p class="w3-text-blue">Already a member ?</p>
+            <a href="/" class="w3-card w3-mobile w3-hover-white w3-button w3-block w3-blue w3-border w3-border-white" id="login-btn" style="margin-top: 10px">login</a>
         </div><hr>
     </center>
     <div class="w3-border-top w3-border-blue w3-center w3-mobile w3-container w3-card" style="margin-top: 50px">
