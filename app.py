@@ -29,11 +29,11 @@ class SERVER:
         self.app.config['MAX_CONTENT_LENGTH'] = 10*1024*1024 # 10 MB maximum
         self.app.config['MAIL_SERVER']='smtp.mail.yahoo.com'
         self.app.config['MAIL_PORT'] = 465
-        self.app.config['MAIL_USERNAME'] = 'veerusandy@yahoo.com'
-        self.app.config['MAIL_PASSWORD'] = '1sandeep'
+        self.app.config['MAIL_USERNAME'] = 'your@email.com'
+        self.app.config['MAIL_PASSWORD'] = 'secret-password'
         self.app.config['MAIL_USE_TLS'] = False
         self.app.config['MAIL_USE_SSL'] = True
-        self.app.config['MAIL_DEFAULT_SENDER'] = 'veerusandy@yahoo.com'
+        self.app.config['MAIL_DEFAULT_SENDER'] = 'your@email.com'
         self.database = DATABASE()
         self.password_hash = PASSWORD_HASH()
         self.url_hash = URL_HASH()
