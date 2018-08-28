@@ -1,4 +1,5 @@
 import sys
+from encrypt_decrypt import PASSWORD_HASH
 try:
     import sqlite3
     from sqlite3 import Error
@@ -11,6 +12,7 @@ class DATABASE:
         try:
             self.DB = sqlite3.connect("database/creditionals.db",check_same_thread=False)
             self.CUR = self.DB.cursor()
+            self.password_hash = PASSWORD_HASH()
         except Error as e:
             print(e)
             sys.exit(0)
@@ -21,16 +23,61 @@ class DATABASE:
         self.save_image_qry = "INSERT INTO UserImage(userName,Imgpath) VALUES(?,?)"
 
         script = "CREATE TABLE IF NOT EXISTS UserInfo(firstName text NOT NULL,lastName text NOT NULL,\
-        gender text NOT NULL,email text NOT NULL,userName text NOT NULL,password text NOT NULL);\
-        CREATE TABLE IF NOT EXISTS LoginInfo(userName text NOT NULL,password text NOT NULL);\
-        CREATE TABLE IF NOT EXISTS UserImage(userName text NOT NULL,Imgpath text NOT NULL);"
+        gender text NOT NULL,email text NOT NULL,userName text NOT NULL,password BLOB NOT NULL);\
+        CREATE TABLE IF NOT EXISTS LoginInfo(userName text NOT NULL,password BLOB NOT NULL);\
+        CREATE TABLE IF NOT EXISTS UserImage(userName text NOT NULL,Imgpath text NOT NULL);\
+        CREATE TABLE IF NOT EXISTS EmailValidate(email text NOT NULL,validated int NOT NULL);"
         try:
             self.CUR.executescript(script)
             self.DB.commit()
         except Error as e:
             print(e)
             sys.exit(0)
-        
+    
+    def store_without_validate(self,email):
+        qry = 'INSERT INTO EmailValidate(email,validated) VALUES(?,?)'
+        try:
+            self.CUR.execute(qry,(email,0))
+            self.DB.commit()
+        except Error as e:
+            print(e)
+            sys.exit(0)
+
+    def validate_email(self,email):
+        qry = "UPDATE EmailValidate SET validated=1 WHERE email='{}'".format(email)
+        try:
+            self.CUR.execute(qry)
+            self.DB.commit()
+        except Error as e:
+            print(e)
+            sys.exit(0)
+
+    def invalidate_email(self,email):
+        qry = "UPDATE EmailValidate SET validated=0 WHERE email='{}'".format(email)
+        try:
+            self.CUR.execute(qry)
+            self.DB.commit()
+        except Error as e:
+            print(e)
+            sys.exit(0)
+
+    def isEmailValidated(self,email):
+        if email == None:
+            return None
+        qry = "SELECT validated FROM EmailValidate WHERE email='{}'".format(email)
+        try:
+            self.CUR.execute(qry)
+            row = self.CUR.fetchone()
+            if len(row) <= 0:
+                return False
+            if row[0] == 0:
+                return False
+            if row[0] == 1:
+                return True
+        except Error as e:
+            print(e)
+            sys.exit(0)
+
     def saveLoginInfo(self,username,password):
         try:
             print("login details to save:")
@@ -66,7 +113,7 @@ class DATABASE:
             self.CUR.execute(qry)
             row = self.CUR.fetchall()
             if len(row) <= 0:
-                return "Error"
+                return None
             else:
                 return row[0][0]
         except Error as e:
@@ -126,34 +173,31 @@ class DATABASE:
             sys.exit(0)
 
     def updateLoginPassword(self,username,password):
-        qry = "UPDATE LoginInfo SET password='{}' WHERE userName='{}'".format(password,username)
+        qry = "UPDATE LoginInfo SET password=? WHERE userName='{}'".format(username)
         try:
-            self.CUR.execute(qry)
+            self.CUR.execute(qry,(password,))
             self.DB.commit()
         except Error as e:
             print(e)
             sys.exit(0)
 
     def updateUserInfo(self,username,user_info):
-        data = "SET "
+        qry = "UPDATE UserInfo SET {}=? WHERE userName='{}'"
         for key in user_info:
-            data = data +key+"="+"'"+user_info[key]+"'"+","
-        data = data[:-1]
-        qry = "UPDATE UserInfo {} WHERE userName='{}'".format(data,username)
-        print(qry)
-        if len(user_info) != 0:
+            t_qry = qry.format(key,username)
             try:
-                self.CUR.execute(qry)
-                self.DB.commit()
-                try:
-                    new_ps = user_info['password']
-                    self.updateLoginPassword(username,new_ps)
-                except:
-                    pass
+                self.CUR.execute(t_qry,(user_info[key],))
             except Error as e:
-                print("HHHHHHHH")
+                print("in for loop")
                 print(e)
                 sys.exit(0)
+        if len(user_info) > 0:
+            self.DB.commit()
+        try:
+            new_ps = user_info['password']
+            self.updateLoginPassword(username,new_ps)
+        except:
+            pass
 
     def getUserImage(self,username):
         qry = "SELECT * FROM UserImage WHERE userName='{}'".format(username)
@@ -171,22 +215,14 @@ class DATABASE:
 
     def login(self,username, password):
         qry = "SELECT * FROM LoginInfo WHERE userName='{}'".format(username)
-        status = False
         try:
             self.CUR.execute(qry)
             row = self.CUR.fetchall()
-            if len(row) <= 0:
-                status = False
-            else:
-                if row[0][1] == password:
-                    status = True
-                else:
-                    status = False
-
-            return status
+            if len(row) > 0:
+                return self.password_hash.check(row[0][1],password)
         except Error as e:
             print(e)
-            sys.exit(0)
+            return False
 
     def isUsernameAvail(self,username):
         qry = "SELECT * FROM LoginInfo WHERE userName='{}'".format(username)
